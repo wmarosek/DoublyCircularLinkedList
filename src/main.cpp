@@ -8,12 +8,12 @@ int main(){
 
 	printingTest();
 	addingTest();
-//	deletingTest();
-//	sizeTest();
-//	assigmentTest();
-//	overloadingTest();
+	deletingTest();
+	sizeTest();
+	assigmentTest();
+	overloadingTest();
 
-	splitTest();
+//	splitTest();
 
 
 

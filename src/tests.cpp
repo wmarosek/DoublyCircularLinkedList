@@ -6,8 +6,18 @@ using namespace std;
 
 //Normal and reverse printing list!
 void printingTest();
-//Adding to front, to back , at some postion and randomly
+//Adding to front, to back , after any node and randomly
 void addingTest();
+//Function split test
+void splitTest();
+//Deleting any, any->prev, and by key
+void deletingTest();
+//Size testing
+void sizeTest();
+//Assigment operator test
+void assigmentTest();
+//Overloading operator test 
+void overloadingTest();
 
 
 
@@ -20,7 +30,6 @@ void printingTest(){
 	cout << "[*] Printing normal list\n";
 
 	ring1.randNodes(3);
-    //Normal printing
 	ring1.print();
 
 
@@ -40,7 +49,7 @@ void addingTest(){
 	r1.pushBefore(1);
 	r1.pushBefore(2);
 	r1.pushBefore(3);
-	cout << "[*] Printing list creted by pushBefore\n";
+	cout << "[*] Printing list created by pushBefore\n";
     r1.print();
     r1.destroyRing();
 
@@ -50,9 +59,15 @@ void addingTest(){
     r1.pushAfter(3);
     r1.pushAfter(43);
     r1.pushAfter(53);
-	cout << "[*] Printing list creted by pushAfter\n";
+	cout << "[*] Printing list created by pushAfter\n";
     r1.print();
 
+	r1.initialize();
+	r1.pushBack(1);
+	r1.pushBack(2);
+	r1.pushBack(3);
+	cout << "[*] Printing list created by pushBack\n";
+    r1.print();
 
 	r2.randNodes(-2); //nonpositive number 
 	r2.randNodes(2.3); //wrong instance
@@ -63,10 +78,10 @@ void addingTest(){
 
 	r3.initialize();
 	cout << "[*] Printing list creted by pushBack and randNodes\n";
-	//r3.randNodes(3);
-//	r3.pushBack(3);
-	//r3.pushBack(4);
-	//r3.pushBack(5);
+	r3.randNodes(3);
+	r3.pushBack(3);
+	r3.pushBack(4);
+	r3.pushBack(5);
 	r3.print();
 
 	
@@ -77,6 +92,8 @@ void deletingTest(){
     cout << "\n\t ==== Deleting TEST ====\n\n";
 
     Ring<int> r;
+		r.popByKey(2);
+
 	r.randNodes(3);
     r.pushBefore(2);
     r.randNodes(5); 
@@ -87,7 +104,7 @@ void deletingTest(){
 	r.print();
 
 	cout << "[*] Deleting first node with the Key\n";
-	//r.popByKey(2);
+	r.popByKey(2);
 	r.print();
 
 }
