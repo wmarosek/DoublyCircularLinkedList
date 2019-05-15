@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <ctime>
+#include <typeinfo>
 
 template <typename Key>
 class Ring {
@@ -20,7 +21,7 @@ protected:
     /* ==== Private methods ==== */
     //Adding node with some Key& , after Node* curr
     bool pushNode(Node* curr, const Key&);
-    //Return node with the Key , if valid notes is on ring.
+    //Return node with the Key , if valid node is on ring.
     Node* getByKey(const Key&);
 
 public:
@@ -39,7 +40,7 @@ public:
     int length() const;
     void initialize();
     //Checking that node with key k exist in the ring
-    bool foundByKey(const Key& k);
+    bool findByKey(const Key& k);
 
 
     /* ==== += , =  operators, method copy otherRing ==== */
@@ -56,13 +57,13 @@ public:
     //Insert before any, but any is still the same as before operation
     void pushBack(const Key&);
 
-    /* ==== Poping methods ==== */
+    /* ==== Deleting methods ==== */
     //Deleting first node (any)
-    void popFront();
+    void deleteFront();
     //Deleting any->prev
-    void popBack();
+    void deleteBack();
     //Deleting node with Key k
-    void popByKey(const Key &k);
+    void deleteByKey(const Key &k);
     //Destroying whole ring
     void destroyRing();
 
@@ -75,7 +76,7 @@ public:
               OTHER METHODS        
         ======================== */
 
-    void randNodes(int number);
+    void randNodes(const int& number);
 
     /*  ========================
                 ITERATOR        
@@ -84,19 +85,19 @@ public:
     class Iterator{
     private:
         friend class Ring;
-        mutable Node* iter;
+        Node* iter;
     public:
         Iterator(Node *node) : iter(node) {}
         Iterator() : iter(nullptr) {}
         Iterator(const Iterator& src) : iter(src.iter) {}
         ~Iterator() = default;
         Iterator& operator=(const Iterator &other);
-        Iterator& operator++() const;
-        Iterator operator++(int) const;
-        Iterator& operator--() const;
-        Iterator operator--(int) const;
-        Iterator operator+(int r) ;
-        Iterator operator-(int l) ;
+        Iterator& operator++();
+        Iterator operator++(int);
+        Iterator& operator--();
+        Iterator operator--(int);
+        Iterator operator+(int r);
+        Iterator operator-(int l);
 
         bool operator==(const Iterator &other) const;
         bool operator!=(const Iterator &other) const;
@@ -159,7 +160,7 @@ template<typename Key>
 void Ring<Key>::destroyRing() {
 
     while(!isEmpty()){
-        this->popFront();
+        this->deleteFront();
     }    
 }
 
@@ -188,7 +189,7 @@ void Ring<Key>::print() const{
 
 template<typename Key>
 bool Ring<Key>::pushNode(Node* curr, const Key& k){
-    if(curr && foundByKey(curr->key)){
+    if(curr && findByKey(curr->key)){
         Node* temp = new Node;
         temp->key = k;
         Node* next = curr->next;
@@ -243,34 +244,19 @@ void Ring<Key>::pushBefore(const Key& k){
 
 
 /*  ========================
-          POP METHODS        
+          DELETING METHODS        
     ======================== */
 
 template<typename Key>
-void Ring<Key>::popFront(){
-    if(!isEmpty()){
-        if(any->next != any){
-            Node* p = any->prev;
-            p->next= any->next;
-            any->next->prev = p;
-            delete any;
-            any = p->next;
-
-        }
-        else{
-            delete any;
-            any = nullptr;
-        }
-        count--;
-    }
-    else{
-        std::cerr << "\n\t[!] The ring is empty\n" << std::endl;
-        return;
-    }
+void Ring<Key>::deleteFront(){
+    if(any != any->next && any!=nullptr)
+        any = any->next;
+    deleteBack();
+  
 }
 
 template <typename Key>
-void Ring<Key>::popBack(){
+void Ring<Key>::deleteBack(){
     if(!isEmpty()){
         if(any->prev != any){
             Node* temp = any->prev;
@@ -291,15 +277,15 @@ void Ring<Key>::popBack(){
     }
 }
 template <typename Key>
-void Ring<Key>::popByKey(const Key& k){
+void Ring<Key>::deleteByKey(const Key& k){
     Node* curr = getByKey(k);
     if(curr){
         if(curr == any){
-            popFront();
+            deleteFront();
             
         }
         else if(curr == any->prev){
-            popBack();
+            deleteBack();
             
         }
         else{
@@ -387,9 +373,9 @@ void Ring<Key>::update(const Key& old, const Key& newKey){
 
 
 template <typename Key>
-void Ring<Key>::randNodes(int number){
+void Ring<Key>::randNodes(const int& number){
     srand(time(NULL));
-    if (typeid(Key) == typeid(int) && number > 0){
+    if (typeid(Key) == typeid(int) && typeid(number) == typeid(int) && number > 0){
         for (int i = 0; i < number; i++){
             int randomKey = rand() % 100 + 1;
             this->pushBefore(randomKey);
@@ -406,39 +392,24 @@ template <typename Key>
 typename Ring<Key>::Node* Ring<Key>::getByKey(const Key& k){
     if(!isEmpty()){
         //If any's key is equal to k , return any 
-        if(any->key == k){
-            return any;
-        }
-        Node* curr = any->next;
-        while(curr!=any){
-            if(curr->key == k){
+        Node* curr = any;
+        do{
+            if(curr->key == k)
                 return curr;
-            }
-            //If next curr is equal to any and curr->k != k, we know that at the ring node with the key isn't exist 
-            if(curr->next == any){
-                return nullptr;
-            }
             curr = curr->next;
-        }
+        }while(curr!=any);        
     }
     return nullptr;
+    
 }
 
 template<typename Key>
-bool Ring<Key>::foundByKey(const Key& k){
-    if(!isEmpty()){
-        if(any->key == k){
-            return true;
-        }
-        Node* temp = any->next;
-        while(temp!=any){
-            if(temp->key == k){
-                return true;
-            }        
-            temp = temp->next;
-        }
-    }
-    return false;
+bool Ring<Key>::findByKey(const Key& k){
+    Node* temp = getByKey(k);
+    if(!temp)
+        return false;
+    
+    return true;
 }
 
 /*  ================================================
@@ -455,27 +426,27 @@ typename Ring<Key>::Iterator& Ring<Key>::Iterator::operator=(const Iterator &oth
 }
 
 template <typename Key>
-typename Ring<Key>::Iterator& Ring<Key>::Iterator::operator++() const{
+typename Ring<Key>::Iterator& Ring<Key>::Iterator::operator++() {
     this->iter = this->iter->next;
     return *this;
 }
 
 template <typename Key>
-typename Ring<Key>::Iterator Ring<Key>::Iterator::operator++(int) const{
+typename Ring<Key>::Iterator Ring<Key>::Iterator::operator++(int) {
     Iterator r = *this;
     ++(*this);
     return r;
 }
 
 template <typename Key>
-typename Ring<Key>::Iterator& Ring<Key>::Iterator::operator--() const{
+typename Ring<Key>::Iterator& Ring<Key>::Iterator::operator--() {
     this->iter = this->iter->prev;
     return *this;
 
 }
 
 template <typename Key>
-typename Ring<Key>::Iterator Ring<Key>::Iterator::operator--(int) const{
+typename Ring<Key>::Iterator Ring<Key>::Iterator::operator--(int) {
     Iterator r = *this;
     --(*this);
     return r;
@@ -545,20 +516,25 @@ Key& Ring<Key>::Iterator::operator*() const{
 template <typename Key>
 void split(const Ring<Key>& src, Ring<Key>& r1, bool dir1, int len1, Ring<Key>& r2, bool dir2, int len2){
     if(!src.isEmpty()){
-        typename Ring<Key>::Iterator it1 = src.begin();
-        typename Ring<Key>::Iterator it2 = it1+1;
-        r1.initialize();
-        r2.initialize();
-        while(len1>0){
-            dir1 ? r1.pushBack(*(it1)) : r2.pushBack(*(it1));
-            dir1 ? it1 = it1 + 2 : it1 = it1 - 2;
-            len1--;
-        }
+        if(typeid(dir1) == typeid(bool) && typeid(dir2) == typeid(bool) && len1>=0 && len2>=0){
+            
+            typename Ring<Key>::Iterator it1 = src.begin();
+            typename Ring<Key>::Iterator it2 = it1+1;
+            
+            r1.initialize();
+            r2.initialize();
+            
+            while(len1>0){
+                r1.pushBack(*(it1));
+                dir1 ? it1 = it1 + 2 : it1 = it1 - 2;
+                len1--;
+            }
 
-        while(len2>0){
-            dir2 ? r2.pushBack(*(it2)) : r2.pushBack(*(it2));
-            dir2 ? it2 = it2 + 2 : it2 = it2 - 2;
-            len2--;
+            while(len2>0){
+                r2.pushBack(*(it2));
+                dir2 ? it2 = it2 + 2 : it2 = it2 - 2;
+                len2--;
+            }
         }
     }
 }

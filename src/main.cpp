@@ -13,10 +13,9 @@ int main(){
 	assigmentTest();
 	overloadingTest();
 	updateTest();
+	splitTest();
 
-
-//	splitTest();
-
+	conclusion();
 
 
 	return 0;
