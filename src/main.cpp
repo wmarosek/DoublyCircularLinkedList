@@ -12,6 +12,8 @@ int main(){
 	sizeTest();
 	assigmentTest();
 	overloadingTest();
+	updateTest();
+
 
 //	splitTest();
 

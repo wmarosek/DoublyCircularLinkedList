@@ -17,6 +17,7 @@ protected:
     int count = 0;
     Node* any;
 
+    /* ==== Private methods ==== */
     //Adding node with some Key& , after Node* curr
     bool pushNode(Node* curr, const Key&);
     //Return node with the Key , if valid notes is on ring.
@@ -41,11 +42,12 @@ public:
     bool foundByKey(const Key& k);
 
 
-    /* += , =  operators, method copy otherRing */
+    /* ==== += , =  operators, method copy otherRing ==== */
     void copyRing(const Ring<Key>&);
     const Ring& operator=(const Ring<Key>&);
     const Ring& operator+=(const Ring<Key>&);
 
+    /* ==== Pushing methods ==== */
 
     //Insert before any, and any becomes new node
     void pushBefore(const Key&);
@@ -54,15 +56,18 @@ public:
     //Insert before any, but any is still the same as before operation
     void pushBack(const Key&);
 
+    /* ==== Poping methods ==== */
     //Deleting first node (any)
     void popFront();
     //Deleting any->prev
     void popBack();
     //Deleting node with Key k
     void popByKey(const Key &k);
-
     //Destroying whole ring
     void destroyRing();
+
+    /* ==== Update method ==== */
+    void update(const Key& old, const Key& newKey);
 
     void print() const;
 
@@ -363,8 +368,23 @@ const Ring<Key>& Ring<Key>::operator+=(const Ring<Key>& otherRing){
 }
 
 /*  ========================
+        UPDATE METHOD        
+    ======================== */
+
+template<typename Key>
+void Ring<Key>::update(const Key& old, const Key& newKey){
+    Node* curr = getByKey(old);
+    if(curr){
+        curr->key = newKey;
+        return;
+    }
+    std::cerr << "[!] Ring doesn't have Node with " << old << "\n";
+}
+
+/*  ========================
         ADDITIONAL METHODS        
     ======================== */
+
 
 template <typename Key>
 void Ring<Key>::randNodes(int number){
@@ -385,6 +405,7 @@ void Ring<Key>::randNodes(int number){
 template <typename Key>
 typename Ring<Key>::Node* Ring<Key>::getByKey(const Key& k){
     if(!isEmpty()){
+        //If any's key is equal to k , return any 
         if(any->key == k){
             return any;
         }
@@ -393,7 +414,7 @@ typename Ring<Key>::Node* Ring<Key>::getByKey(const Key& k){
             if(curr->key == k){
                 return curr;
             }
-            //when next curr is equal to any so we know that at the ring node with the key isn't exist 
+            //If next curr is equal to any and curr->k != k, we know that at the ring node with the key isn't exist 
             if(curr->next == any){
                 return nullptr;
             }

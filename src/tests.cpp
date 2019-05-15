@@ -18,9 +18,38 @@ void sizeTest();
 void assigmentTest();
 //Overloading operator test 
 void overloadingTest();
+//Update method test
+void updateTest();
 
+void updateTest(){
+    cout << "\n\t ==== Update TEST ====\n\n";
 
+    Ring<int> ring1;
+	ring1.randNodes(3);
+	ring1.pushBack(3);
+	cout << "[*] Printing normal list\n";
 
+	ring1.print();
+	ring1.update(3,5);
+	ring1.update(101,5);
+
+	cout << "[*] Printing updated list\n";
+	ring1.print();
+
+	ring1.initialize();
+	cout << "[*] List is empty\n";
+	ring1.update(3,3);
+
+	ring1.initialize();
+	ring1.pushBack(3);
+	cout << "[*] Printing one node normal list\n";
+
+	ring1.print();
+	ring1.update(3,5);
+	cout << "[*] Printing updated list\n";
+	ring1.print();
+
+}
 
 void printingTest(){
     cout << "\n\t ==== PRINTING TEST ====\n\n";
