@@ -55,7 +55,7 @@ void printingTest(){
 
 	ring1.randNodes(3);
 	ring1.print();
-	if(ring1.length()!=3) 
+	if(ring1.length()!=3)
 		correct = false;
 
 	cout << "[*] Printing clear list\n";
@@ -104,7 +104,7 @@ void addingTest(){
 	r1.pushBack(1);
 	r1.pushBack(2);
 	r1.pushBack(3);
-	it = r1.begin();
+	//it = r1.begin();
 	if(r1.length()!=3 || *(it-1) != 3) 
 		correct = false;
 	cout << "[*] Printing list created by pushBack\n";

@@ -102,7 +102,7 @@ public:
         bool operator==(const Iterator &other) const;
         bool operator!=(const Iterator &other) const;
 
-        Key& operator*() const;
+        Key operator*() const;
         
     };
 
@@ -501,8 +501,8 @@ bool Ring<Key>::Iterator::operator!=(const Iterator &other) const{
 }
 
 template <typename Key>
-Key& Ring<Key>::Iterator::operator*() const{
-    return this->iter->key;
+Key Ring<Key>::Iterator::operator*() const{
+    return (iter ? iter->key : 0);
 }
 
 
